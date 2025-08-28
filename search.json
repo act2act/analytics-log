@@ -1,0 +1,23 @@
+[
+  {
+    "objectID": "index.html",
+    "href": "index.html",
+    "title": "analytics-log",
+    "section": "",
+    "text": "This is a Quarto website.\nTo learn more about Quarto websites visit https://quarto.org/docs/websites."
+  },
+  {
+    "objectID": "projects/w_template/00-README.html",
+    "href": "projects/w_template/00-README.html",
+    "title": "analytics-log",
+    "section": "",
+    "text": "Duplicate per week: cp -R w_template/ w1/ then rename files.\nUpdate Quarto _quarto.yml to include projects/ or w*/report.qmd in the build.\n\nWeek 3 (ML): add models/ for saved .pkl/.joblib files. Week 5 (BI): drop ERD PDFs in output/diagrams/. Week 6 (end-to-end): you might nest a mini-app or API; put that under src/ or service/."
+  },
+  {
+    "objectID": "about.html",
+    "href": "about.html",
+    "title": "About",
+    "section": "",
+    "text": "About this site"
+  }
+]
