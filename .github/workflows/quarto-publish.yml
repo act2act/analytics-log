@@ -3,14 +3,17 @@ name: Quarto Publish
 
 on:
   push:
-    branches: [ master ]           # or 'master' if that’s your default
+    branches: [ master ]           # or 'main' if that’s your default
+
+permissions:
+  contents: write
 
 jobs:
   publish:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
       # Install Quarto
       - uses: quarto-dev/quarto-actions/setup@v2

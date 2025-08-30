@@ -12,8 +12,7 @@ website:
 format:
   html:
     theme:
-      - cosmo
-      - brand
+      - darkly
     css: styles.css
     toc: true
 
