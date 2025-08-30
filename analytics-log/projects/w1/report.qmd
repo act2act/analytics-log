@@ -1,0 +1,94 @@
+---
+title: "Week 1 — Spec-build & business framing"
+subtitle: "Workout Wednesday (Python) + Mini Case"
+date: "2025-08-30"
+format:
+  html:
+    toc: true
+    code-fold: show
+categories: [week1, python, workout-wednesday, minicase]
+description: "Rebuild a Workout Wednesday spec and a mini case; ship dashboard + README."
+---
+
+# Overview
+- Objective: <one sentence on the business goal>
+- Scope: <what you will and won’t cover>
+- Deliverables:
+  - Workout Wednesday dashboard
+  - Mini case dashboard
+  - README (problem, assumptions, metrics)
+
+# Business framing
+## Problem
+- <business question(s) and success criteria>
+
+## Assumptions
+- <data, time, stakeholder, or domain assumptions>
+
+## Metrics
+- Primary KPI(s): <list>
+- Supporting metrics: <list>
+- Calculation notes: <brief notes>
+
+# Data
+## Sources
+- <dataset name/URL>
+- <data collection notes>
+
+## Dictionary — before/after
+- Before: <raw columns + types>
+- After: <cleaned columns + types + rationale>
+
+# Methods
+## Workout Wednesday (Python Rebuild)
+- Link to spec: <URL>
+- Key requirements: <bullets>
+- Design choices (Python viz): <library, layout, color, interactions>
+
+## Case Approach (Maven/DataDNA)
+- Case brief: <2–3 lines>
+- Modeling/aggregation: <facts/dimensions, grain, joins>
+
+# Results
+## Key findings
+- <top 3–5 insights with “so what”>
+
+## Visuals
+![Workout Wednesday Screenshot](output/figs/ww_dashboard.png){width=100%}
+![Mini Case Screenshot](output/figs/case_dashboard.png){width=100%}
+
+# Dashboard
+ 
+
+# Reproducibility
+- Environment: Python <version>
+- How to run:
+  1. Run `notebooks/` in order
+  2. Export figures to `output/figs/`
+
+# Appendix
+## Python (wrangling/validation)
+```python
+# notebooks/w1_prep.ipynb (excerpt)
+import pandas as pd
+
+raw = pd.read_csv("data/raw/source.csv")
+# ... cleaning ...
+final = raw  # replace with your pipeline
+final.to_csv("data/processed/final.csv", index=False)
+```
+
+## SQL (if applicable)
+```sql
+-- scripts/w1_transform.sql (excerpt)
+SELECT
+  user_id,
+  DATE_TRUNC('day', event_ts) AS event_day,
+  COUNT(*) AS events
+FROM events
+GROUP BY 1, 2;
+```
+
+## Checks
+- Data quality: <nulls, duplicates, ranges>
+- Performance: <calc performance notes if any>
