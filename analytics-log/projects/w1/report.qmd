@@ -1,6 +1,6 @@
 ---
 title: "Week 1 — Food Insecurity: Level vs % Change"
-subtitle: "Workout Wednesday (Python)"
+subtitle: "This post compares the level of food insecurity with its year-over-year % change"
 date: "2025-09-06"
 format:
   html:
@@ -10,13 +10,12 @@ categories: [week1, python, workout-wednesday, time-series]
 ---
 
 # Overview
-- Objective: "This post compares the level of food insecurity with its year-over-year % change.
 
 ## Level (the "what")
 ![](../../projects/w1/output/figures/Food_insecurity_trends.png){fig-cap="Food insecurity levels over time (% of households)"}
 
 ## YoY % change (the "momentum")
-![](../../projects/w1/output/figures/%_change_trends.png){fig-cap="YoY $ change"}
+![](../../projects/w1/output/figures/pct_change_trends.png){fig-cap="YoY % change"}
 
 ### Takeaways
 - Levels trend downward through the 2010s → gradual improvement.
