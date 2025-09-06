@@ -8,10 +8,10 @@ website:
       - href: index.qmd
         text: Home
       - about.qmd
-      # - text: Projects
-      #   menu:
-      #     - href: projects/w1/report.qmd
-      #       text: Week 1
+      - text: Projects
+        menu:
+          - href: projects/w1/report.qmd
+            text: Week 1
 
 format:
   html:
