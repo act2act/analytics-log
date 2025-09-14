@@ -1,6 +1,6 @@
 ---
 title: "Week 2 — Basic Exploratory Data Analysis with Udemy Course Data"
-subtitle: "This post includes an exploratory data  analysis (EDA) of Udemy course data."
+subtitle: "This post includes an exploratory data analysis (EDA) of Udemy course data."
 date: "2025-09-14"
 format:
   html:
@@ -21,7 +21,9 @@ categories: [week2, python, Onyx Data, EDA]
 다음은 상관관계 분석이다. 상관관계란 통계적 방법 중 하나로 두 변수가 서로에 대해 양 또는 음의 방향으로 얼만큼 움직였는가를 알아내기 위해 사용한다.
 무슨 소리냐하면, x, y 두 변수가 있다고 하자. 상관관계의 값은 -1에서 +1 범위를 갖는데 그 중 +0.8이라 하면, x가 +1 표준편차만큼 증가했을 때, y는 평균적으로 +0.8배의 표준편차만큼 증가한다는 걸 의미한다. 그 반대도 마찬가지다.
 기억을 되짚을겸 평균부터 상관관계까지 계산 과정을 한번에 살펴보자.
+
 ![](../../projects/w2/output/figures/calculation_corr.png){fig-cap="calculation from mean to correlation"}
+
 나중에 두 특성 간 상관관계가 플러스든, 마이너스든 0.8 상당의 값이 나온다면 왜 그 수치가 나왔는지 생각해볼 필요가 있을 것이다.
 여기서 조심해야할 것은 이 값이 높다고 해서 두 특성 간 인과관계가 있다는 것은 아니라는 거다. x가 y 값에 이만큼 영향을 끼친다로 해석해서는 안되며, 단지 그 결과의 표면적인 패턴일 뿐인걸 명심하자.
 
@@ -32,8 +34,8 @@ categories: [week2, python, Onyx Data, EDA]
 마지막으론 시각화 방법 몇 가지를 살펴본다. 산점도(Scatter plot)는 두 특성 간 어떤 관계가 있는지 나타낼 수 있다.
 선형관계가 나타날 수도 있고 어떠한 관계도 없을 수 있고 그렇다. 또, 점의 색깔이나 크기를 다르게 해서 몇 가지 특성들을 추가적으로 포함시켜 분석할 수 있다.
 다음은 Heatmap인데 이는 위에서 본 상관관계를 직관적으로 나타낸다. 낮은 상관관계는 파란색 계열, 높은 상관관계는 빨간색 계열로 나타내거나 하는 식이다.
-Boxplots은 평균, 중앙값, 사분위값, 이상치 같은 통계적 수치들을 시각적으로 표현한 방법이다.
-Time-series는 이름에서 알 수 있듯이 시간별로 값을 나타낸 것으로 주가 그래프를 떠올리면 된다.
+Boxplot은 평균, 중앙값, 사분위값, 이상치 같은 통계적 수치들을 시각적으로 표현한 방법이다.
+시계열(Time-series)은 이름에서 알 수 있듯이 시간별로 값을 나타낸 것으로 주가 그래프를 떠올리면 된다.
 
 ## Data Overview
 데이터의 shape은 (3678, 12)이고, df.head()의 결과는 아래와 같다.
@@ -96,6 +98,8 @@ max           78.500000
 ![](../../projects/w2/output/figures/num_lectures_distribution.png){fig-cap="distribution of number of lectures"}
 ![](../../projects/w2/output/figures/content_duration_distribution.png){fig-cap="distribution of content duration"}
 
+price를 제외한 특성들의 분포가 크게 right-skewed 되어 있는 것을 확인할 수 있다.
+
 ### Categorical splits
 ![](../../projects/w2/output/figures/is_paid_distribution.png){fig-cap="distribution of is paid"}
 ![](../../projects/w2/output/figures/level_distribution.png){fig-cap="distribution of level"}
@@ -118,6 +122,9 @@ num_lectures      0.330160         0.157746     0.243029      1.000000          
 content_duration  0.293450         0.161839     0.228889      0.801647          1.000000
 ```
 
+비교적 큰 상관관계를 갖는 특성 페어는 content duration-number of lectures,  number of subscribers-number of reviews다.
+강의 개수가 많을수록 강의 시간이 늘어나는 것과 구독자 수가 많을수록 리뷰 수가 많을 거라는 건 어렵지 않게 추측할 수 있다.
+
 ## Log-scale relationships for heavy-tailed variables
 ![](../../projects/w2/output/figures/num_subscribers_log_distribution.png){fig-cap="log distribution of number of subscribers"}
 ![](../../projects/w2/output/figures/num_reviews_log_distribution.png){fig-cap="log distribution of number of reviews"}
@@ -136,5 +143,3 @@ content_duration  0.293450         0.161839     0.228889      0.801647          
 
 ### Time-series
 ![](../../projects/w2/output/figures/median_price_per_month.png){fig-cap="median price per month"}
-
-### Takeaways
