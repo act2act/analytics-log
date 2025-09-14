@@ -1,0 +1,140 @@
+---
+title: "Week 2 — Basic Exploratory Data Analysis with Udemy Course Data"
+subtitle: "This post includes an exploratory data  analysis (EDA) of Udemy course data."
+date: "2025-09-14"
+format:
+  html:
+    toc: true
+    code-fold: show
+categories: [week2, python, Onyx Data, EDA]
+---
+
+# Before Dive-In
+온라인 강의 사이트인 Udemy 강의에 관련된 엑셀 데이터로 열은 'course_id', 'course_title', 'url', 'is_paid', 'price', 'num_subscribers', 'num_reviews', 'num_lectures', 'level', 'content_duration', 'published_timestamp', 'subject'로 구성되어 있다.
+어떤 분석이 가능할지 LLM 친구와 얘기해보자. 먼저, 기본적인 EDA가 있을거다. EDA는 Exploratory Data Analysis의 약자로 탐색적 데이터 분석 되시겠다.
+데이터 분석 초기 단계에서 진행하는 EDA는 데이터를 그래프, 통계, 시각화 등을 이용하여 다양한 각도에서 조망하고 이해하기 위한 과정이다.
+
+그 다음으론 Feature engineering을 말한다. 이건 'price',  'num_subscribers'와 같이 기존에 있던 특성(데이터셋의 열에 해당) 중 몇 가지를 조합해 유의미한 특성을 개발해내는 것을 말한다.
+예를 들어, 'price'와 'num_subscribers (for paid courses only)'를 곱해 'Estimated revenue'라는 새로운 특성을 만들 수 있다.
+실습에선 이 과정은 생략했다.
+
+다음은 상관관계 분석이다. 상관관계란 통계적 방법 중 하나로 두 변수가 서로에 대해 양 또는 음의 방향으로 얼만큼 움직였는가를 알아내기 위해 사용한다.
+무슨 소리냐하면, x, y 두 변수가 있다고 하자. 상관관계의 값은 -1에서 +1 범위를 갖는데 그 중 +0.8이라 하면, x가 +1 표준편차만큼 증가했을 때, y는 평균적으로 +0.8배의 표준편차만큼 증가한다는 걸 의미한다. 그 반대도 마찬가지다.
+기억을 되짚을겸 평균부터 상관관계까지 계산 과정을 한번에 살펴보자.
+![](../../projects/w2/output/figures/calculation_corr.png){fig-cap="calculation from mean to correlation"}
+나중에 두 특성 간 상관관계가 플러스든, 마이너스든 0.8 상당의 값이 나온다면 왜 그 수치가 나왔는지 생각해볼 필요가 있을 것이다.
+여기서 조심해야할 것은 이 값이 높다고 해서 두 특성 간 인과관계가 있다는 것은 아니라는 거다. x가 y 값에 이만큼 영향을 끼친다로 해석해서는 안되며, 단지 그 결과의 표면적인 패턴일 뿐인걸 명심하자.
+
+로그 스케일 분포도 해본다. 나중에 살펴보겠지만 특성의 분포 대부분이 비대칭적이다. 특히, right-skewed 분포를 가질 때 로그 변환을 사용한다. 또한, 로그는 0이나 음수엔 적용할 수 없다.
+로그는 작은 수보다 큰 수를 더 압축시키는 역할을 한다. 예를 들어, 1, 10, 100, 1000을 로그 변환하면 0, 2.3, 4.6, 6.9로 크게 압축 되는 걸 볼 수 있다.
+이렇게 압축시키면 right tail을 당기게 되서 균형적인 분포 모양을 만들 수 있다. 실생활에서 지수적으로 커지는 많은 것들을 볼 수 있는데 로그는 이런 곱의 관계를 덧셈으로 만들어줘 더 직관적인 해석이 가능하게 만들어준다.
+
+마지막으론 시각화 방법 몇 가지를 살펴본다. 산점도(Scatter plot)는 두 특성 간 어떤 관계가 있는지 나타낼 수 있다.
+선형관계가 나타날 수도 있고 어떠한 관계도 없을 수 있고 그렇다. 또, 점의 색깔이나 크기를 다르게 해서 몇 가지 특성들을 추가적으로 포함시켜 분석할 수 있다.
+다음은 Heatmap인데 이는 위에서 본 상관관계를 직관적으로 나타낸다. 낮은 상관관계는 파란색 계열, 높은 상관관계는 빨간색 계열로 나타내거나 하는 식이다.
+Boxplots은 평균, 중앙값, 사분위값, 이상치 같은 통계적 수치들을 시각적으로 표현한 방법이다.
+Time-series는 이름에서 알 수 있듯이 시간별로 값을 나타낸 것으로 주가 그래프를 떠올리면 된다.
+
+## Data Overview
+데이터의 shape은 (3678, 12)이고, df.head()의 결과는 아래와 같다.
+
+```python
+   course_id                                       course_title  \
+0    1070968                 Ultimate Investment Banking Course   
+1    1113822  Complete GST Course & Certification - Grow You...   
+2    1006314  Financial Modeling for Business Analysts and C...   
+3    1210588  Beginner to Pro - Financial Analysis in Excel ...   
+4    1011058       How To Maximize Your Profits Trading Options   
+
+                                                 url  is_paid  price  \
+0  https://www.udemy.com/ultimate-investment-bank...     True    200   
+1      https://www.udemy.com/goods-and-services-tax/     True     75   
+2  https://www.udemy.com/financial-modeling-for-b...     True     45   
+3  https://www.udemy.com/complete-excel-finance-c...     True     95   
+4  https://www.udemy.com/how-to-maximize-your-pro...     True    200   
+
+   num_subscribers  num_reviews  num_lectures               level  \
+0             2147           23            51          All Levels   
+1             2792          923           274          All Levels   
+2             2174           74            51  Intermediate Level   
+3             2451           11            36          All Levels   
+4             1276           45            26  Intermediate Level   
+
+   content_duration   published_timestamp           subject  
+0               1.5  2017-01-18T20:58:58Z  Business Finance  
+1              39.0  2017-03-09T16:34:20Z  Business Finance  
+2               2.5  2016-12-19T19:26:30Z  Business Finance  
+3               3.0  2017-05-30T20:07:24Z  Business Finance  
+4               2.0  2016-12-13T14:57:18Z  Business Finance  
+
+              price  num_subscribers   num_reviews  num_lectures
+count   3678.000000      3678.000000   3678.000000   3678.000000   
+mean      66.049483      3197.150625    156.259108     40.108755   
+std       61.005755      9504.117010    935.452044     50.383346   
+min        0.000000         0.000000      0.000000      0.000000   
+25%       20.000000       111.000000      4.000000     15.000000   
+50%       45.000000       911.500000     18.000000     25.000000   
+75%       95.000000      2546.000000     67.000000     45.750000   
+max      200.000000    268923.000000  27445.000000    779.000000   
+
+       content_duration  
+count       3678.000000  
+mean           4.094517  
+std            6.053840  
+min            0.000000  
+25%            1.000000  
+50%            2.000000  
+75%            4.500000  
+max           78.500000  
+```
+
+## Basic EDA
+### Distributions
+![](../../projects/w2/output/figures/price_distribution.png){fig-cap="distribution of price"}
+![](../../projects/w2/output/figures/num_subscribers_distribution.png){fig-cap="distribution of number of subscribers"}
+![](../../projects/w2/output/figures/num_reviews_distribution.png){fig-cap="distribution of number of reviews"}
+![](../../projects/w2/output/figures/num_lectures_distribution.png){fig-cap="distribution of number of lectures"}
+![](../../projects/w2/output/figures/content_duration_distribution.png){fig-cap="distribution of content duration"}
+
+### Categorical splits
+![](../../projects/w2/output/figures/is_paid_distribution.png){fig-cap="distribution of is paid"}
+![](../../projects/w2/output/figures/level_distribution.png){fig-cap="distribution of level"}
+![](../../projects/w2/output/figures/subject_distribution.png){fig-cap="distribution of subject"}
+
+### Time-series
+![](../../projects/w2/output/figures/price_over_time.png){fig-cap="time-series of price"}
+![](../../projects/w2/output/figures/num_subscribers_over_time.png){fig-cap="time-series of subscribers"}
+![](../../projects/w2/output/figures/num_reviews_over_time.png){fig-cap="time-series of reviews"}
+![](../../projects/w2/output/figures/num_lectures_over_time.png){fig-cap="time-series of lectures"}
+![](../../projects/w2/output/figures/content_duration_over_time.png){fig-cap="time-series of content duration"}
+
+## Correlation matrix
+```python
+                     price  num_subscribers  num_reviews  num_lectures  content_duration
+price             1.000000         0.050769     0.113696      0.330160          0.293450
+num_subscribers   0.050769         1.000000     0.649946      0.157746          0.161839
+num_reviews       0.113696         0.649946     1.000000      0.243029          0.228889
+num_lectures      0.330160         0.157746     0.243029      1.000000          0.801647
+content_duration  0.293450         0.161839     0.228889      0.801647          1.000000
+```
+
+## Log-scale relationships for heavy-tailed variables
+![](../../projects/w2/output/figures/num_subscribers_log_distribution.png){fig-cap="log distribution of number of subscribers"}
+![](../../projects/w2/output/figures/num_reviews_log_distribution.png){fig-cap="log distribution of number of reviews"}
+![](../../projects/w2/output/figures/num_lectures_log_distribution.png){fig-cap="log distribution of number of lectures"}
+![](../../projects/w2/output/figures/content_duration_log_distribution.png){fig-cap="log distribution of content duration"}
+
+## Visualization
+### Scatter plot
+![](../../projects/w2/output/figures/price_vs_num_subscribers.png){fig-cap="scatter plot between price and number of subscribers"}
+
+### Heatmap
+![](../../projects/w2/output/figures/correlation_heatmap.png){fig-cap="correlation heatmap"}
+
+### Boxplot
+![](../../projects/w2/output/figures/boxplot_price_vs_level.png){fig-cap="boxplot of price and level"}
+
+### Time-series
+![](../../projects/w2/output/figures/median_price_per_month.png){fig-cap="median price per month"}
+
+### Takeaways

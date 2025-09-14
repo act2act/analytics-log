@@ -3,6 +3,7 @@ title: "analytics-log"
 listing:
     contents:
         - projects/**/report.qmd
+        - "!projects/w_template/**"
     type: grid
     grid-columns: 3
     sort: "date desc"
