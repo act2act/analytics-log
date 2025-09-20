@@ -1,0 +1,123 @@
+---
+title: "Week 3 — Inferential Statistics"
+subtitle: "This post includes an inferential statistics with hotel bookings dataset."
+date: "2025-09-16"
+format:
+  html:
+    toc: true
+    code-fold: show
+categories: [week3, Python, Onyx Data, Inferential statistics]
+---
+
+# Before Diving In
+
+## What is inferential statistics?
+
+추론 통계는 쉽게 말하면 국 끓일 때 간 보는 것과 유사하다. 간을 보고 국의 맛을 판단하는데 여기에 그 판단에 대해 얼마나 불확실한지 정량화하는 과정을 추가한 것이다.
+이 예시를 가지고 핵심 개념을 살펴보자. 국 전체(population)에서 한 스푼(sample)을 떠서 간을 본다.
+이때 우리는 국 전체의 간(parameters)은 모른다. 국 한 스푼의 간(statistics)을 아는 것이다.
+국에서 한 스푼을 뜰 때, 냄비를 2등분해서 한쪽에서만 계속 간을 보면 그 과정이 공평하며, 결과를 믿을 수 있을까?
+전체 냄비에서 무작위로 간을 봐야(random sampling) 공평하다고 할 수 있다.
+여러 번에 걸쳐 간을 보면 어쩔 땐 짜고, 어쩔 땐 딱 좋고 다 다를거다(sampling variability).
+대략 30 번의 간을 보면 그 결과치에 대한 분포는 정규분포에 가까워진다(CLT; Central Limit Theorem).
+
+## So what?
+
+냄비를 2등분해서 한쪽엔 소금을 넣고, 한쪽엔 소금을 안넣었다. 그리고 질문한다. "소금을 넣은 쪽이 안넣은 쪽보다 더 짤 것인가?"
+이 질문에 유효한 답변을 하기 위해 불확실성을 고려한 최선의 추측(CI; Confidence Interval)을 하게 된다. 이를 위해 알아야할 것들을 살펴보자.
+1. "두 쪽의 차이가 없다(H0; Null hypothesis)."와 "소금 넣은 쪽이 더 짜다(H1; Alternative hypothesis)." 가설을 세운다.
+2. 두 국물이 사실 똑같다(H0)고 치자. 그럼 지금처럼 짜게 차이 나 보일 일이 순전히 우연으로 일어날 확률은 얼마인가(p-value)? 이 값이 작을수록 우연으로는 설명이 잘 안된다는 뜻이다.
+3. 우연을 5%(alpha)까진 봐주도록 하자.
+
+자, 이제 검정을 해보자.
+만약 두 국물이 같다고 치면, 지금만큼의 차이가 우연일 확률은 p다.
+만약 p ≤ 0.05라면 "이건 우연으로 보기엔 무리"라고 보고 H0을 (reject)한다. 따라서, "소금 넣은 쪽이 더 짜다."고 결론 짓는다.
+만약 p > 0.05라면 "우연으로 설명 못할 정도는 아니다"라고 보고 H0을 (failed to reject)한다. 따라서, "현재 표본만으론 차이를 단정짓기 어렵다."고 결론 짓는다.
+
+## Rule of thumb: How to pick a test
+
+두 가지 질문을 해보자. 첫째, "내가 궁금한 질문에 대한 대답은 어떤 형태지? 숫자인가, 예/아니오인가 혹은 범주형인가?"
+다음으로, "몇 개의 비교대상(그룹)이 있지? 그것들은 서로 독립적인가? 아니면 짝지어져(e.g. 전/후, 같은 대상) 있는가?"
+
+숫자형의 결과가 나왔다면:
+- One group vs. a target number: One-sample t-test
+- Two independent groups: Two-sample t-test
+- Two related measurements (before/after on same units): Paired t-test
+- Three or more groups: One-way ANOVA
+- Relationship between two numeric variables: Correlation or simple linear regression
+
+예/아니오형 결과가 나왔다면:
+- One group vs a target rate: One-proportion test
+- Two independent groups: Two-proportion z-test
+- Many groups or a cross-tab of categories: Chi-square test of independence
+- Predict yes/no from multiple factors: Logistic regression
+
+범주형 결과가 나왔다면:
+- Compare distributions across categories: Chi-square test (goodness-of-fit or independence)
+
+Paired/repeated 측정의 경우:
+- Two time points (same subjects): Paired t-test (numeric outcome)
+- More than two time points (same subjects): Repeated-measures ANOVA (basic idea)
+
+Small samples or skewed data의 경우:
+- Consider nonparametric alternatives, or transform the data
+
+이번 포스트에서 다룰 데이터를 가지고 어떤 테스트를 할지 정해보자.
+```Python
+Data columns (total 32 columns):
+ #   Column                          Non-Null Count   Dtype         
+---  ------                          --------------   -----         
+ 0   hotel                           119390 non-null  object        
+ 1   is_canceled                     119390 non-null  int64         
+ 2   lead_time                       119390 non-null  int64         
+ 3   arrival_date_year               119390 non-null  int64         
+ 4   arrival_date_month              119390 non-null  object        
+ 5   arrival_date_week_number        119390 non-null  int64         
+ 6   arrival_date_day_of_month       119390 non-null  int64         
+ 7   stays_in_weekend_nights         119390 non-null  int64         
+ 8   stays_in_week_nights            119390 non-null  int64         
+ 9   adults                          119390 non-null  int64         
+ 10  children                        119386 non-null  float64       
+ 11  babies                          119390 non-null  int64         
+ 12  meal                            119390 non-null  object        
+ 13  country                         118902 non-null  object        
+ 14  market_segment                  119390 non-null  object        
+ 15  distribution_channel            119390 non-null  object        
+ 16  is_repeated_guest               119390 non-null  int64         
+ 17  previous_cancellations          119390 non-null  int64         
+ 18  previous_bookings_not_canceled  119390 non-null  int64         
+ 19  reserved_room_type              119390 non-null  object        
+ 20  assigned_room_type              119390 non-null  object        
+ 21  booking_changes                 119390 non-null  int64         
+ 22  deposit_type                    119390 non-null  object        
+ 23  agent                           103050 non-null  float64       
+ 24  company                         6797 non-null    float64       
+ 25  days_in_waiting_list            119390 non-null  int64         
+ 26  customer_type                   119390 non-null  object        
+ 27  adr                             119390 non-null  float64       
+ 28  required_car_parking_spaces     119390 non-null  int64         
+ 29  total_of_special_requests       119390 non-null  int64         
+ 30  reservation_status              119390 non-null  object        
+ 31  reservation_status_date         119390 non-null  datetime64[ns]
+dtypes: datetime64[ns](1), float64(4), int64(16), object(11)
+memory usage: 29.1+ MB
+"""
+```
+
+데이터에 대한 내 질문은 이렇다. "market segment별로 cancellation rate이 다른가?"
+위에서 정의한 첫번째 질문에 대한 대답은 "결과값은 different vs. not different로 범주형"이라는 것이고, 두번째 질문에 대답하기 위해선 market segment 열을 조금 더 살펴보아야 한다.
+
+![](../../projects/w3/output/figures/00_market_segment_distribution.png){fig-cap="distribution of market segment"}
+
+Undefined를 제외하면 7 가지 범주로 이루어져 있고, 종합하면 Chi-square test를 해야 한다는 것을 확인할 수 있다.
+근데... 그래서 그게 뭔데?
+
+## Let's explore each test
+
+### Z-test
+### T-test
+### Chi-square test
+### ANOVA
+### Logistic regression
+
+# Hands-on Exercise
