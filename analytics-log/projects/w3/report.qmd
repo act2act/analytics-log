@@ -1,7 +1,7 @@
 ---
 title: "Week 3 — Inferential Statistics"
 subtitle: "This post includes an inferential statistics with hotel bookings dataset."
-date: "2025-09-16"
+date: "2025-09-20"
 format:
   html:
     toc: true
@@ -25,45 +25,45 @@ categories: [week3, Python, Onyx Data, Inferential statistics]
 
 냄비를 2등분해서 한쪽엔 소금을 넣고, 한쪽엔 소금을 안넣었다. 그리고 질문한다. "소금을 넣은 쪽이 안넣은 쪽보다 더 짤 것인가?"
 이 질문에 유효한 답변을 하기 위해 불확실성을 고려한 최선의 추측(CI; Confidence Interval)을 하게 된다. 이를 위해 알아야할 것들을 살펴보자.
-1. "두 쪽의 차이가 없다(H0; Null hypothesis)."와 "소금 넣은 쪽이 더 짜다(H1; Alternative hypothesis)." 가설을 세운다.
-2. 두 국물이 사실 똑같다(H0)고 치자. 그럼 지금처럼 짜게 차이 나 보일 일이 순전히 우연으로 일어날 확률은 얼마인가(p-value)? 이 값이 작을수록 우연으로는 설명이 잘 안된다는 뜻이다.
-3. 우연을 5%(alpha)까진 봐주도록 하자.
+  1. "두 쪽의 차이가 없다(H0; Null hypothesis)."와 "소금 넣은 쪽이 더 짜다(H1; Alternative hypothesis)." 가설을 세운다.
+  2. 두 국물이 사실 똑같다(H0)고 치자. 그럼 지금처럼 짜게 차이 나 보일 일이 순전히 우연으로 일어날 확률은 얼마인가(p-value)? 이 값이 작을수록 우연으로는 설명이 잘 안된다는 뜻이다.
+  3. 우연을 5%(alpha)까진 봐주도록 하자.
 
 자, 이제 검정을 해보자.
 만약 두 국물이 같다고 치면, 지금만큼의 차이가 우연일 확률은 p다.
-만약 p ≤ 0.05라면 "이건 우연으로 보기엔 무리"라고 보고 H0을 (reject)한다. 따라서, "소금 넣은 쪽이 더 짜다."고 결론 짓는다.
-만약 p > 0.05라면 "우연으로 설명 못할 정도는 아니다"라고 보고 H0을 (failed to reject)한다. 따라서, "현재 표본만으론 차이를 단정짓기 어렵다."고 결론 짓는다.
+  - 만약 p ≤ 0.05라면 "이건 우연으로 보기엔 무리"라고 보고 H0을 (reject)한다. 따라서, "소금 넣은 쪽이 더 짜다."고 결론 짓는다.
+  - 만약 p > 0.05라면 "우연으로 설명 못할 정도는 아니다"라고 보고 H0을 (failed to reject)한다. 따라서, "현재 표본만으론 차이를 단정짓기 어렵다."고 결론 짓는다.
 
 ## Rule of thumb: How to pick a test
 
 두 가지 질문을 해보자. 첫째, "내가 궁금한 질문에 대한 대답은 어떤 형태지? 숫자인가, 예/아니오인가 혹은 범주형인가?"
-다음으로, "몇 개의 비교대상(그룹)이 있지? 그것들은 서로 독립적인가? 아니면 짝지어져(e.g. 전/후, 같은 대상) 있는가?"
+둘째, "몇 개의 비교대상(그룹)이 있지? 그것들은 서로 독립적인가? 아니면 짝지어져(e.g. 전/후, 같은 대상) 있는가?"
 
 숫자형의 결과가 나왔다면:
-- One group vs. a target number: One-sample t-test
-- Two independent groups: Two-sample t-test
-- Two related measurements (before/after on same units): Paired t-test
-- Three or more groups: One-way ANOVA
-- Relationship between two numeric variables: Correlation or simple linear regression
+  - One group vs. a target number: One-sample t-test
+  - Two independent groups: Two-sample t-test
+  - Two related measurements (before/after on same units): Paired t-test
+  - Three or more groups: One-way ANOVA
+  - Relationship between two numeric variables: Correlation or simple linear regression
 
 예/아니오형 결과가 나왔다면:
-- One group vs a target rate: One-proportion test
-- Two independent groups: Two-proportion z-test
-- Many groups or a cross-tab of categories: Chi-square test of independence
-- Predict yes/no from multiple factors: Logistic regression
+  - One group vs a target rate: One-proportion test
+  - Two independent groups: Two-proportion z-test
+  - Many groups or a cross-tab of categories: Chi-square test of independence
+  - Predict yes/no from multiple factors: Logistic regression
 
 범주형 결과가 나왔다면:
-- Compare distributions across categories: Chi-square test (goodness-of-fit or independence)
+  - Compare distributions across categories: Chi-square test (goodness-of-fit or independence)
 
 Paired/repeated 측정의 경우:
-- Two time points (same subjects): Paired t-test (numeric outcome)
-- More than two time points (same subjects): Repeated-measures ANOVA (basic idea)
+  - Two time points (same subjects): Paired t-test (numeric outcome)
+  - More than two time points (same subjects): Repeated-measures ANOVA (basic idea)
 
 Small samples or skewed data의 경우:
-- Consider nonparametric alternatives, or transform the data
+  - Consider nonparametric alternatives, or transform the data
 
 이번 포스트에서 다룰 데이터를 가지고 어떤 테스트를 할지 정해보자.
-```Python
+```python
 Data columns (total 32 columns):
  #   Column                          Non-Null Count   Dtype         
 ---  ------                          --------------   -----         
@@ -101,7 +101,6 @@ Data columns (total 32 columns):
  31  reservation_status_date         119390 non-null  datetime64[ns]
 dtypes: datetime64[ns](1), float64(4), int64(16), object(11)
 memory usage: 29.1+ MB
-"""
 ```
 
 데이터에 대한 내 질문은 이렇다. "market segment별로 cancellation rate이 다른가?"
@@ -110,14 +109,32 @@ memory usage: 29.1+ MB
 ![](../../projects/w3/output/figures/00_market_segment_distribution.png){fig-cap="distribution of market segment"}
 
 Undefined를 제외하면 7 가지 범주로 이루어져 있고, 종합하면 Chi-square test를 해야 한다는 것을 확인할 수 있다.
+
 근데... 그래서 그게 뭔데?
 
 ## Let's explore each test
+글 서두의 국의 간을 보는 예시를 통해서 이해해보자.
 
 ### Z-test
+z-test는 국 전체의 짠맛이 보통 얼마나 다른지(σ; 모표준편차)를 알고 있을 때 사용한다.
+그 알고 있는 편차를 고려했을 때, 이 스푼의 평균이 목표치보다 이렇게 멀리 떨어진 건 우연일까? 라는 물음을 다룬다.
+평균에 대한 σ(모표준편차)를 아는 경우는 드물어, 현실에선 많이 사용되지 못한다.
+
 ### T-test
+t-test는 국 전체의 짠맛의 차이(σ; 모표준편차)를 몰라 각 스푼으로부터 추정한다.
+그 추정치를 고려했을 때, 관측된 이 차이는 단순히 무작위적인 맛 차이인걸까? 라는 물음을 다룬다.
+
 ### Chi-square test
+chi-square test는 결과가 salty vs. not salty처럼 범주형이고, 각 그룹별 count를 비교할 때 사용한다.
+호텔 데이터 예시에서 different vs. not different 그리고 segment별 개체 수 비교를 원하는 것이기 때문에 이 테스트를 선택한 것이다.
+국의 각 부분에서 간을 볼 때, 소금이 영향이 없다면 count 패턴이 유사해야만 할 것이다.
+
 ### ANOVA
+세 개 이상의 그룹군의 숫자형 결과치의 평균을 비교할 때 사용한다.
+국을 A/B/C...로 나누고 각 영역의 간을 보고 모든 영역의 짠 수준이 비슷한지, 혹은 적어도 하나 이상의 영역이 더 짠지를 알아내기 위해 사용한다.
+
 ### Logistic regression
+결과값이 yes/no 형태이며, 몇 가지 요인을 한번에 고려해 미래 결과를 예상하고자 할 때 사용한다.
+한 스푼을 어디서 떴는지, 얼마나 오래 끓였는지, 국자 깊이는 어떤지와 같은 각 요인들이 다른 요인들이 일정할 때 어떻게 확률을 변화시키는지 같은 단서를 가지고 salty or not을 예측하는 것이다.
 
 # Hands-on Exercise
